@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <item android:id="@+id/action_reload"
+        android:title="@string/action_reload"/>
+    <item android:id="@+id/action_deldiary"
+        android:title="@string/action_deldiary"/>
+    <item android:id="@+id/action_textsize"
+        android:title="@string/action_textsize">
+        <menu>
+            <item android:id="@+id/action_sizesmall"
+                android:title="@string/action_sizesmall"/>
+            <item android:id="@+id/action_sizemedium"
+                android:title="@string/action_sizemedium"/>
+            <item android:id="@+id/action_sizelarge"
+                android:title="@string/action_sizelarge"/>
+        </menu>
+    </item>
+</menu>

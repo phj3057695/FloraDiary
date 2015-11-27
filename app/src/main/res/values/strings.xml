@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FloraDiary</string>
+    <string name="action_settings">Settings</string>
+    <string name="save">Save</string>
+    <string name="action_reload">Reload Diary</string>
+    <string name="action_deldiary">Delete Diary</string>
+    <string name="action_textsize">Adjust Text Size</string>
+    <string name="action_sizesmall">small</string>
+    <string name="action_sizemedium">medium</string>
+    <string name="action_sizelarge">large</string>
+</resources>
