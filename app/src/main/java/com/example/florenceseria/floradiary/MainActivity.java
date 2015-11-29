@@ -4,8 +4,12 @@ package com.example.florenceseria.floradiary;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,40 +29,19 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    View dialogView;
-    TextView txtDate;
+    TextView txtDate,toastText;
     Button btnSave;
     EditText edtContent;
+    View toastView;
+    ImageView toastIcon, toastIcon2;
+    LinearLayout toastLayout;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
     Calendar cal = Calendar.getInstance();
     File myDir;
-//    int cYear;
-//    int cMonth;
-//    int cDay;
     String fileName, dir;
-//    class dlgbtnClass implements DialogInterface.OnClickListener{
-//        public static final int BUTTON_POSITIVE = -1;
-//
-//        /**
-//         * The identifier for the negative button.
-//         */
-//        public static final int BUTTON_NEGATIVE = -2;
-//        File target;
-//        @Override
-//        public void onClick(DialogInterface dialog, int which) {
-//            if(which==BUTTON_POSITIVE){
-//                target = new File(dir);
-//                target.delete();
-//                Toast.makeText(getApplicationContext(),sdf.format(cal.getTime())+" Diary file has been deleted,",Toast.LENGTH_SHORT).show();
-//                edtContent.setText(null);
-//            }
-//            else{
-//                //nothing;
-//            }
-//        }
-//    }
     class MydlgClass implements View.OnClickListener{
         @Override
         public void onClick(View v) {
@@ -69,6 +54,24 @@ public class MainActivity extends AppCompatActivity {
         String content = readDiary(dir);
         edtContent.setText(content);
     }
+    public void myToast(String str, @DrawableRes int res, @ColorInt int colour){
+        Toast toast = new Toast(MainActivity.this);
+        toastView = View.inflate(MainActivity.this,R.layout.custom_toast,null);
+        toastText=(TextView)toastView.findViewById(R.id.toastText);
+        toastIcon=(ImageView)toastView.findViewById(R.id.toastIcon);
+        toastIcon2=(ImageView)toastView.findViewById(R.id.toastIcon2);
+        toastLayout=(LinearLayout)toastView.findViewById(R.id.customToast);
+        toastText.setText(str);
+        toastLayout.setBackgroundColor(colour);
+        toastIcon.setImageResource(res);
+        toastIcon2.setImageResource(res);
+        toast.setView(toastView);
+        toast.show();
+    }
+    String strResource(@StringRes int str){
+        String result = getResources().getString(str);
+        return result;
+    }
 
     DatePickerDialog.OnDateSetListener dp = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -80,9 +83,7 @@ public class MainActivity extends AppCompatActivity {
             setFileDir(year, monthOfYear, dayOfMonth);
         }
     };
-    MydlgClass buttonlistener;
-    //dlgbtnClass dlgbuttonlistener;
-
+    MydlgClass buttonlistener =new MydlgClass();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int cYear = cal.get(Calendar.YEAR);
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         txtDate=(TextView)findViewById(R.id.txtDate);
         btnSave=(Button)findViewById(R.id.btnSave);
         edtContent=(EditText)findViewById(R.id.edtContent);
-        buttonlistener = new MydlgClass();
         txtDate.setText(sdf.format(cal.getTime()));
         txtDate.setOnClickListener(buttonlistener);
 
@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         myDir = new File(strSDPath+"/mydiary");
         if(!myDir.exists()){
             myDir.mkdir();
-            Toast.makeText(getApplicationContext(),"mydiary Directory has been added",Toast.LENGTH_SHORT).show();
-        }
+            myToast(strResource(R.string.dir_make), R.drawable.diary_64, Color.CYAN);
+         }
         setFileDir(cYear, cMonth, cDay);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     String str = edtContent.getText().toString();
                     fos.write(str.getBytes());
                     fos.close();
-                    Toast.makeText(getApplicationContext(),fileName+" is saved.",Toast.LENGTH_SHORT).show();
+                    myToast(fileName + strResource(R.string.diary_saved), R.drawable.floppy_disk,Color.CYAN);
                 }catch(IOException e){}
             }
         });
@@ -128,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
            diaryStr = (new String(txt)).trim();
            inFs.close();
        }catch(Exception e) {
-           edtContent.setHint("No Diary");
-
+           edtContent.setHint(strResource(R.string.nodiary));
        }
        return diaryStr;
    }
@@ -145,42 +144,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String date;
-        String content = readDiary(dir);
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        final String content = readDiary(dir);
         switch(item.getItemId()){
             case R.id.action_reload:
                 if(content!=null) {
                     edtContent.setText(content);
+                    myToast(fileName + strResource(R.string.reloaded), R.drawable.diary_64, Color.CYAN);
                 }else{
-                    Toast.makeText(getApplicationContext(),"Diary is empty...",Toast.LENGTH_SHORT).show();
+                    myToast(fileName +" "+ strResource(R.string.no_file_exist), R.drawable.diary_64, Color.CYAN);
                 }
                 return true;
             case R.id.action_deldiary:
                 if(content!=null) {
                     AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
-                    dlg.setTitle("Confirm");
+                    dlg.setTitle(strResource(R.string.confirm));
                     date = sdf.format(cal.getTime());
-                    dlg.setMessage("Are you sure to delete " + date + " diary?");
-                    dlg.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    dlg.setMessage(date +" " + strResource(R.string.delete_target)+" "+strResource(R.string.delete_question));
+                    dlg.setPositiveButton(strResource(R.string.delete), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             File target = new File(dir);
                             target.delete();
-                            Toast.makeText(getApplicationContext(),sdf.format(cal.getTime())+" Diary file has been deleted,",Toast.LENGTH_SHORT).show();
+                            myToast(strResource(R.string.deleted),R.drawable.del_icon,Color.CYAN);
                             edtContent.setText(null);
                         }
                     });
-                    dlg.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    dlg.setNegativeButton(strResource(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(),"Cancelled",Toast.LENGTH_SHORT).show();
+                            myToast(strResource(R.string.cancel),R.drawable.del_icon,Color.CYAN);
                         }
                     });
                     dlg.show();
                 }else{
-                    Toast.makeText(getApplicationContext(),"Diary is empty...",Toast.LENGTH_SHORT).show();
+                    myToast(strResource(R.string.nodiary),R.drawable.floppy_disk,Color.CYAN);
                 }
                 return true;
             case R.id.action_sizelarge:

@@ -8,4 +8,16 @@
     <string name="action_sizesmall">small</string>
     <string name="action_sizemedium">medium</string>
     <string name="action_sizelarge">large</string>
+    <string name="dir_make">/mydiary has been created</string>
+    <string name="nodiary">No Diary.</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_question">Are you sure to delete?</string>
+    <string name="delete_target">diary will be deleted</string>
+    <string name="diary_saved">file created.</string>
+    <string name="reloaded">is reloaded.</string>
+    <string name="del_cancelled">Delete Cancelled</string>
+    <string name="no_file_exist">file isn\'t exist</string>
+    <string name="deleted">diary file has been deleted</string>
 </resources>
