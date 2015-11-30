@@ -4,6 +4,7 @@ package com.example.florenceseria.floradiary;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -84,6 +85,26 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     MydlgClass buttonlistener =new MydlgClass();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK){
+            String txtFile = data.getStringExtra("txtFile");
+            Integer iYear = Integer.parseInt(data.getStringExtra("year"));
+            Integer iMonth = Integer.parseInt(data.getStringExtra("month"))-1;
+            Integer iDay = Integer.parseInt(data.getStringExtra("day"));
+            cal.set(Calendar.YEAR,iYear);
+            cal.set(Calendar.MONTH,iMonth);
+            cal.set(Calendar.DAY_OF_MONTH,iDay);
+            txtDate.setText(sdf.format(cal.getTime()));
+            setFileDir(iYear, iMonth, iDay);
+            myToast(txtFile+strResource(R.string.reloaded), R.drawable.diary_64, Color.CYAN);
+        }
+        else if(resultCode==RESULT_CANCELED){
+            myToast(strResource(R.string.Quickload_cancel),R.drawable.diary_64,Color.CYAN);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int cYear = cal.get(Calendar.YEAR);
@@ -189,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_sizesmall:
                 edtContent.setTextSize(10);
                 return true;
+            case R.id.action_quickload:
+                Intent intent = new Intent(getApplication(),SecondActivity.class);
+                intent.putExtra("txtDir",myDir.toString());
+                startActivityForResult(intent, 0);
         }
         return false;
     }

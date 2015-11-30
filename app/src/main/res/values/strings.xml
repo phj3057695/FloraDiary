@@ -20,4 +20,10 @@
     <string name="del_cancelled">Delete Cancelled</string>
     <string name="no_file_exist">file isn\'t exist</string>
     <string name="deleted">diary file has been deleted</string>
+    <string name="action_quickload">Quick Load</string>
+    <string name="btnCancel">Go Back</string>
+    <string name="btnQuickLoad">Load</string>
+    <string name="Quickload_cancel">QuickLoad Cancelled</string>
+    <string name="Quickload_OK">Loaded</string>
+    <string name="QuickLoadList">Quick Load List</string>
 </resources>

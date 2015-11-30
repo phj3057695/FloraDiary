@@ -21,4 +21,10 @@
     <string name="del_cancelled">삭제가 취소되었습니다</string>
     <string name="no_file_exist">파일이 존재하지 않습니다</string>
     <string name="deleted">일기 파일이 삭제되었습니다</string>
+    <string name="action_quickload">퀵로드</string>
+    <string name="btnCancel">돌아가기</string>
+    <string name="btnQuickLoad">불러오기</string>
+    <string name="Quickload_cancel">퀵로드가 취소되었습니다.</string>
+    <string name="Quickload_OK">로드되었습니다.</string>
+    <string name="QuickLoadList">퀵로드 리스트</string>
 </resources>

@@ -15,4 +15,6 @@
                 android:title="@string/action_sizelarge"/>
         </menu>
     </item>
+    <item android:id="@+id/action_quickload"
+        android:title="@string/action_quickload"/>
 </menu>
