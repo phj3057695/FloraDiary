@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
             new DatePickerDialog(MainActivity.this,dp,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show();
         }
     }
-    public void setFileDir(int year, int month, int day){
-        fileName=Integer.toString(year)+"_"+Integer.toString(month+1)+"_"+Integer.toString(day)+".txt";
+    public void setFileDir(int year, int month, int day){ //
+        fileName=Integer.toString(year)+"_"+String.format("%02d",month+1)+"_"+String.format("%02d",day)+".txt";
         dir = myDir.toString()+"/"+fileName;
         String content = readDiary(dir);
         edtContent.setText(content);
