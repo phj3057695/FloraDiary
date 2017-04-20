@@ -211,9 +211,13 @@ public class MainActivity extends AppCompatActivity {
                 edtContent.setTextSize(10);
                 return true;
             case R.id.action_quickload:
-                Intent intent = new Intent(getApplication(),SecondActivity.class);
-                intent.putExtra("txtDir",myDir.toString());
-                startActivityForResult(intent, 0);
+                try {
+                    Intent intent = new Intent(getApplication(), SecondActivity.class);
+                    intent.putExtra("txtDir",myDir.toString());
+                    startActivityForResult(intent, 0);
+                }catch(Exception e){
+                    myToast(strResource(R.string.nodiary),R.drawable.floppy_disk,Color.CYAN);
+                }
         }
         return false;
     }
