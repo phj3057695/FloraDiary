@@ -1,17 +1,22 @@
 
 package com.example.florenceseria.floradiary;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,20 +93,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode==RESULT_OK){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
             String txtFile = data.getStringExtra("txtFile");
             Integer iYear = Integer.parseInt(data.getStringExtra("year"));
-            Integer iMonth = Integer.parseInt(data.getStringExtra("month"))-1;
+            Integer iMonth = Integer.parseInt(data.getStringExtra("month")) - 1;
             Integer iDay = Integer.parseInt(data.getStringExtra("day"));
-            cal.set(Calendar.YEAR,iYear);
-            cal.set(Calendar.MONTH,iMonth);
-            cal.set(Calendar.DAY_OF_MONTH,iDay);
+            cal.set(Calendar.YEAR, iYear);
+            cal.set(Calendar.MONTH, iMonth);
+            cal.set(Calendar.DAY_OF_MONTH, iDay);
             txtDate.setText(sdf.format(cal.getTime()));
             setFileDir(iYear, iMonth, iDay);
-            myToast(txtFile+strResource(R.string.reloaded), R.drawable.diary_64, Color.CYAN);
-        }
-        else if(resultCode==RESULT_CANCELED){
-            myToast(strResource(R.string.Quickload_cancel),R.drawable.diary_64,Color.CYAN);
+            myToast(txtFile + strResource(R.string.reloaded), R.drawable.diary_64, Color.CYAN);
+        } else if (resultCode == RESULT_CANCELED) {
+            myToast(strResource(R.string.Quickload_cancel), R.drawable.diary_64, Color.CYAN);
         }
     }
 
@@ -117,8 +122,21 @@ public class MainActivity extends AppCompatActivity {
         edtContent=(EditText)findViewById(R.id.edtContent);
         txtDate.setText(sdf.format(cal.getTime()));
         txtDate.setOnClickListener(buttonlistener);
+        String strSDPath=null;
+        if (Build.VERSION.SDK_INT>=26) {
+            int pCheck = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+            int pCheck2 = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (pCheck == PackageManager.PERMISSION_DENIED || pCheck2 == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MODE_PRIVATE);
+            } else {
+                //본작업 시작
 
-        final String strSDPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                strSDPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            }
+        }else{
+            //구버전 안드로이드면 무조건 본작업 시작
+            strSDPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
         myDir = new File(strSDPath+"/mydiary");
         if(!myDir.exists()){
             myDir.mkdir();
